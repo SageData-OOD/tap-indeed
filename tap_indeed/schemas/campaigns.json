@@ -1,0 +1,20 @@
+{
+  "type": ["null", "object"],
+  "properties": {
+    "Name": {"type": ["null", "string"]},
+    "Id": {"type": ["null", "string"]},
+    "Date": {
+      "type": ["null", "string"],
+      "format": "date-time"
+    },
+    "Clicks": {"type": ["null", "integer"]},
+    "Impressions": {"type": ["null", "integer"]},
+    "Conversions": {"type": ["null", "integer"]},
+    "CurrencyCode": {"type": ["null", "string"]},
+    "Cost": {"type": ["null", "number"]},
+    "OrganicClicks": {"type": ["null", "integer"]},
+    "OrganicImpressions": {"type": ["null", "integer"]},
+    "Applystarts": {"type": ["null", "integer"]},
+    "OrganicApplystarts": {"type": ["null", "integer"]}
+  }
+}

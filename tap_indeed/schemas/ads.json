@@ -1,0 +1,20 @@
+{
+  "type": ["null", "object"],
+  "properties": {
+    "Ad_ID": {"type": ["null", "string"]},
+    "Advertisement": {"type": ["null", "string"]},
+    "Job": {"type": ["null", "string"]},
+    "Job_Reference_Number": {"type": ["null", "string"]},
+    "Platform": {"type": ["null", "string"]},
+    "Clicks": {"type": ["null", "integer"]},
+    "Impressions": {"type": ["null", "integer"]},
+    "Conversions": {"type": ["null", "integer"]},
+    "Spend": {"type": ["null", "number"]},
+    "Currency": {"type": ["null", "string"]},
+    "Date": {
+      "type": ["null", "string"],
+      "format": "date-time"
+    },
+    "CompanyName": {"type": ["null", "string"]}
+  }
+}
