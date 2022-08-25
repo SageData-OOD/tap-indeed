@@ -2,7 +2,7 @@
   "type": ["null", "object"],
   "properties": {
     "EmployerId": {"type": ["null", "string"]},
-    "EmployerName": {"type": ["null", "string"],
+    "EmployerName": {"type": ["null", "string"]},
     "Name": {"type": ["null", "string"]},
     "Id": {"type": ["null", "string"]},
     "Date": {
