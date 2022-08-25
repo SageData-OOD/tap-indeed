@@ -1,7 +1,8 @@
 {
   "type": ["null", "object"],
   "properties": {
-    "Employer_Id": {"type": ["null", "string"]},
+    "EmployerId": {"type": ["null", "string"]},
+    "EmployerName": {"type": ["null", "string"]},
     "Ad_ID": {"type": ["null", "string"]},
     "Advertisement": {"type": ["null", "string"]},
     "Job": {"type": ["null", "string"]},
@@ -15,7 +16,6 @@
     "Date": {
       "type": ["null", "string"],
       "format": "date-time"
-    },
-    "CompanyName": {"type": ["null", "string"]}
+    }
   }
 }
