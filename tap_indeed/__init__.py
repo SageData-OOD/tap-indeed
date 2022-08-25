@@ -256,7 +256,7 @@ def sync_ads(config, state, stream, employer_id):
 
             tap_data['Spend'] = pd.to_numeric(tap_data['Spend'])
             tap_data['Date'] = bookmark
-            tap_data['CompanyName'] = config["employers"][employer_id]['name']
+            tap_data['EmployerName'] = config["employers"][employer_id]['name']
 
             stats = pd.concat([
                 stats,
@@ -265,7 +265,7 @@ def sync_ads(config, state, stream, employer_id):
             records = stats.reset_index(drop=True)
             # Replace 'nan' with 0.0 for "Spend" column.
             records["Spend"] = records["Spend"].fillna(0).astype('float')
-            records['Employer_Id'] = employer_id
+            records['EmployerId'] = employer_id
             records.columns = records.columns.str.replace(" ", "_")
             records = records.to_dict("records")
 
@@ -324,7 +324,8 @@ def sync_campaigns(config, state, stream, employer_id):
 
             records = pd.DataFrame(all_states)
 
-            records['Employer_Id'] = employer_id
+            records['EmployerId'] = employer_id
+            records['EmployerName'] = config["employers"][employer_id]['name']
             records.columns = records.columns.str.replace(" ", "_")
             records = records.to_dict("records")
             with singer.metrics.record_counter(stream.tap_stream_id) as counter:
