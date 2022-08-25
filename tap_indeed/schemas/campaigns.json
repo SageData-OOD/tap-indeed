@@ -1,6 +1,7 @@
 {
   "type": ["null", "object"],
   "properties": {
+    "Employer_Id": {"type": ["null", "string"]},
     "Name": {"type": ["null", "string"]},
     "Id": {"type": ["null", "string"]},
     "Date": {
