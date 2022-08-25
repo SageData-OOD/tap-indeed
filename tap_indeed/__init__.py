@@ -66,7 +66,7 @@ def refresh_access_token_if_expired(config, employer_id):
 
 def get_key_properties(stream_id):
     keys = {
-        "ads": ["Ad_ID", "Date"],
+        "ads": ["Ad_ID", "Date", "Job_Reference_Number", "Platform"],
         "campaigns": ["Id", "Date"],
     }
     return keys[stream_id]
@@ -265,6 +265,7 @@ def sync_ads(config, state, stream, employer_id):
             records = stats.reset_index(drop=True)
             # Replace 'nan' with 0.0 for "Spend" column.
             records["Spend"] = records["Spend"].fillna(0).astype('float')
+            records['Employer_Id'] = employer_id
             records.columns = records.columns.str.replace(" ", "_")
             records = records.to_dict("records")
 
@@ -322,6 +323,8 @@ def sync_campaigns(config, state, stream, employer_id):
             )
 
             records = pd.DataFrame(all_states)
+
+            records['Employer_Id'] = employer_id
             records.columns = records.columns.str.replace(" ", "_")
             records = records.to_dict("records")
             with singer.metrics.record_counter(stream.tap_stream_id) as counter:
