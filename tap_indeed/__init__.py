@@ -263,6 +263,8 @@ def sync_ads(config, state, stream, employer_id):
                 tap_data]
             )
             records = stats.reset_index(drop=True)
+            # Replace 'nan' with 0.0 for "Spend" column.
+            records["Spend"] = records["Spend"].fillna(0).astype('float')
             records.columns = records.columns.str.replace(" ", "_")
             records = records.to_dict("records")
 
