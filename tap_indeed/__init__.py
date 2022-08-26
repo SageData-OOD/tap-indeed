@@ -15,6 +15,7 @@ from singer.schema import Schema
 from singer.transform import transform
 
 REQUIRED_CONFIG_KEYS = ["start_date", "client_id", "client_secret"]
+DEFAULT_CONVERSION_WINDOW = 14
 LOGGER = singer.get_logger()
 URLS = {
     "get_token": "https://apis.indeed.com/oauth/v2/tokens",
@@ -213,6 +214,22 @@ def get_next_date(_date: str):
     return datetime_to_str(datetime.strptime(_date, '%Y-%m-%d') + timedelta(days=1))
 
 
+def get_valid_start_date(date_to_poll, conversion_window):
+    """
+    fix for data freshness
+    e.g. Sunday's data is available at 3 AM UTC on Monday
+    If integration is set to sync at 1AM then a problem occurs
+    """
+
+    utcnow = datetime.utcnow()
+    date_to_poll = datetime.strptime(date_to_poll, "%Y-%m-%d")
+
+    if date_to_poll >= utcnow - timedelta(days=conversion_window):
+        date_to_poll = utcnow - timedelta(days=conversion_window)
+
+    return date_to_poll.strftime("%Y-%m-%d")
+
+
 def sync_ads(config, state, stream, employer_id):
     mdata = metadata.to_map(stream.metadata)
     schema = stream.schema.to_dict()
@@ -225,6 +242,8 @@ def sync_ads(config, state, stream, employer_id):
 
     # {bookmarks: {stream_id: {<employer_id>: <date>}}}
     start_date = singer.get_bookmark(state, stream.tap_stream_id, employer_id, config["start_date"])
+    conversion_window = config.get("conversion_window", DEFAULT_CONVERSION_WINDOW)
+    start_date = get_valid_start_date(start_date, conversion_window)
 
     bookmark = start_date
     stats = pd.DataFrame()
@@ -302,6 +321,9 @@ def sync_campaigns(config, state, stream, employer_id):
 
     # {bookmarks: {stream_id: {<employer_id>: <date>}}}
     start_date = singer.get_bookmark(state, stream.tap_stream_id, employer_id, config["start_date"])
+    conversion_window = config.get("conversion_window", DEFAULT_CONVERSION_WINDOW)
+    start_date = get_valid_start_date(start_date, conversion_window)
+
     headers = {'Authorization': 'Bearer ' + config["employers"][employer_id]['access_token']}
     for cid in get_list_campaign_ids(config, employer_id):
         bookmark = start_date
