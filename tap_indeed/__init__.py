@@ -15,7 +15,7 @@ from singer.schema import Schema
 from singer.transform import transform
 
 REQUIRED_CONFIG_KEYS = ["start_date", "client_id", "client_secret"]
-DEFAULT_CONVERSION_WINDOW = 14
+DEFAULT_CONVERSION_WINDOW = 5
 LOGGER = singer.get_logger()
 URLS = {
     "get_token": "https://apis.indeed.com/oauth/v2/tokens",
