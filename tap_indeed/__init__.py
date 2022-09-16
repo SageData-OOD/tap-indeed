@@ -250,7 +250,7 @@ def sync_ads(config, state, stream, employer_id):
     today = datetime_to_str(datetime.utcnow().date())
 
     headers = {'Authorization': 'Bearer ' + config["employers"][employer_id]['access_token']}
-    while True:
+    while bookmark <= today:
         next_date = get_next_date(bookmark)
         params = {
             'startDate': bookmark,
@@ -301,10 +301,7 @@ def sync_ads(config, state, stream, employer_id):
                 state = singer.write_bookmark(state, stream.tap_stream_id, employer_id, bookmark)
                 singer.write_state(state)
 
-        if bookmark <= today:
-            bookmark = next_date
-        if bookmark > today:
-            break
+        bookmark = next_date
 
 
 def sync_campaigns(config, state, stream, employer_id):
@@ -325,10 +322,11 @@ def sync_campaigns(config, state, stream, employer_id):
     start_date = get_valid_start_date(start_date, conversion_window)
 
     headers = {'Authorization': 'Bearer ' + config["employers"][employer_id]['access_token']}
-    for cid in get_list_campaign_ids(config, employer_id):
-        bookmark = start_date
-        while True:
-            next_date = get_next_date(bookmark)
+
+    bookmark = start_date
+    while bookmark <= today:
+        next_date = get_next_date(bookmark)
+        for cid in get_list_campaign_ids(config, employer_id):
             params = {
                 'startDate': bookmark,
                 'endDate': next_date,
@@ -358,13 +356,9 @@ def sync_campaigns(config, state, stream, employer_id):
                     singer.write_records(stream.tap_stream_id, [transformed_data])
                     counter.increment()
 
-            if bookmark <= today:
-                state = singer.write_bookmark(state, stream.tap_stream_id, employer_id, bookmark)
-                singer.write_state(state)
-                bookmark = next_date
-            if bookmark > today:
-                break
-
+        state = singer.write_bookmark(state, stream.tap_stream_id, employer_id, bookmark)
+        singer.write_state(state)
+        bookmark = next_date
 
 def sync(config, state, catalog):
     # Get access token to list all employer_ids(employers)
