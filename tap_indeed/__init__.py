@@ -359,13 +359,11 @@ def sync_campaigns(config, state, stream, employer_id):
                     counter.increment()
 
             if bookmark <= today:
+                state = singer.write_bookmark(state, stream.tap_stream_id, employer_id, bookmark)
+                singer.write_state(state)
                 bookmark = next_date
             if bookmark > today:
                 break
-
-    # if there is data, then only we will print state
-    state = singer.write_bookmark(state, stream.tap_stream_id, employer_id, today)
-    singer.write_state(state)
 
 
 def sync(config, state, catalog):
