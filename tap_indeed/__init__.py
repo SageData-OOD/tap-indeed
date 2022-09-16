@@ -268,7 +268,7 @@ def sync_ads(config, state, stream, employer_id):
         if len(tap_data) != 0:
             tap_data = pd.merge(
                 tap_data,
-                tap_data['Spend (currency)'].str.split(' ', expand=True).rename(columns={0: 'Spend', 1: 'Currency'}),
+                tap_data['Spend (currency)'].fillna("0.00 -").str.split(' ', expand=True).rename(columns={0: 'Spend', 1: 'Currency'}),
                 left_index=True,
                 right_index=True
             )
